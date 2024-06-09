@@ -24,7 +24,7 @@ status: true
 10. Some more settings and reboot
 11. Security settings + packages
 
->[!warning] Отключить Secure boot
+>[!warning] Disable Secure boot
 >Arch Linux installation images do not support Secure Boot. You will need to [disable Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Disabling_Secure_Boot "Unified Extensible Firmware Interface/Secure Boot") to boot the installation medium. If desired, [Secure Boot](https://wiki.archlinux.org/title/Secure_Boot "Secure Boot") can be set up after completing the installation.
 >Check status via `bootctl`
 
