@@ -8,21 +8,24 @@ tags:
   - linux
 aliases:
   - workstation
-cssclasses: 
+section: PKB
+subsection: Linux
+class: 
 status: false
 ---
 # <span style="color:#ffadad">Customization</span>
 ## <span style="color:#ffd6a5">WM and additional packages</span>
 Main packages for GUI interfaces
 ```bash
-sudo pacman -S --needed waybar firefox fuse2 ntfs-3g imv mpv mako brightnessctl spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock sddm polkit-kde-agent qt5-wayland qt6-wayland slurp grim nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland cmus
+sudo pacman -S --needed waybar firefox fuse3 ntfs-3g imv mpv mako brightnessctl spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock sddm polkit-kde-agent qt5-wayland qt6-wayland slurp grim wf-recorder nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland cmus 
 ```
 Details:
 - <span style="color:#fdffb6">ttf</span> - main fonts 
-- <span style="color:#fdffb6">fuse2</span> - need for Obsidian 
+- <span style="color:#fdffb6">fuse3</span> - need for Obsidian 
 - <span style="color:#fdffb6">ntfs-3g</span> - for mounting NTFS disks
 - <span style="color:#fdffb6">cmus</span> - music player
 - <span style="color:#fdffb6">gamescope</span> - for steam games (see troubleshooting)
+- wf-recorder - screen recording
 
 ```bash
 paru -S visual-studio-code-bin obsidian-bin
@@ -50,3 +53,8 @@ sudo systemctl enable --now usbguard-dbus.service
 
 ## <span style="color:#ffd6a5">Rice</span>
 See dotfiles
+
+## Colour pallets
+catppucin https://github.com/catppuccin/catppuccin
+gruvbox https://github.com/morhetz/gruvbox
+everforest https://github.com/sainnhe/everforest

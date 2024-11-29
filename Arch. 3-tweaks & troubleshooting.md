@@ -8,7 +8,9 @@ tags:
   - workstation
 aliases:
   - workstation
-cssclasses: 
+section: PKB
+subsection: Linux
+class: 
 status: false
 ---
 # <span style="color:#ffadad">Tweaks</span>

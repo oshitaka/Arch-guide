@@ -8,7 +8,9 @@ tags:
   - workstation
 aliases:
   - workstation
-cssclasses: 
+section: PKB
+subsection: Linux
+class: 
 status: true
 ---
 # <span style="color:#ffadad">Installation guide</span>
@@ -24,7 +26,7 @@ status: true
 10. Some more settings and reboot
 11. Security settings + packages
 
->[!warning] Disable Secure boot
+>[!warning] Отключить Secure boot
 >Arch Linux installation images do not support Secure Boot. You will need to [disable Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Disabling_Secure_Boot "Unified Extensible Firmware Interface/Secure Boot") to boot the installation medium. If desired, [Secure Boot](https://wiki.archlinux.org/title/Secure_Boot "Secure Boot") can be set up after completing the installation.
 >Check status via `bootctl`
 
@@ -100,7 +102,7 @@ ip -br a
 Use `ServerAliveInterval=30` to prevent ssh disconnect
 
 ```bash
-ssh ssh -o ServerAliveInterval=30 root@<client ip>
+ssh -o ServerAliveInterval=30 root@<client ip>
 ```
 
 ## <span style="color:#ffd6a5">Disk preparation</span>
@@ -137,9 +139,9 @@ Create sections
 >Очень важно, следите за размером секторов на диске! От этого зависит скорость доступа к диску It's important to monitor size of sections. It affects on access speed: https://wiki.archlinux.org/title/Parted#Alignment
 
 ```bash
-parted /dev/nvme0n1 mkpart '"EFI system partition"' fat32 1MiB 2GiB && \
-parted /dev/nvme0n1 mkpart '"swap partition"' linux-swap 2GiB 10GiB && \
-parted /dev/nvme0n1 mkpart '"system partition"' ext4 10GiB 100%
+parted /dev/nvme0n1 mkpart '"EFI system partition"' fat32 1MiB 1GiB && \
+parted /dev/nvme0n1 mkpart '"swap partition"' linux-swap 1GiB 9GiB && \
+parted /dev/nvme0n1 mkpart '"system partition"' ext4 9GiB 100%
 ```
 
 >[!note] Sizes and file system
@@ -211,11 +213,13 @@ Swap
 ```bash
 mkswap -L swap $SWAP
 ```
+LABEL=swap, UUID=32aeeef4-1eb0-463d-b4a2-8d87ee8c0555
 
 Root
 ```bash
 mkfs.ext4 $ROOT
 ```
+Filesystem UUID: 8e81e99b-0c5c-4921-947c-16775e394f8f
 
 ### <span style="color:#fdffb6">Mount disks</span>
 Reload info
@@ -239,7 +243,7 @@ mount --mkdir -o uid=0,gid=0,fmask=0137,dmask=0027  /dev/nvme0n1p1 /mnt/boot
 ```
 ### <span style="color:#fdffb6">Install basic packages</span>
 ```bash
-pacstrap -K /mnt base base-devel linux linux-firmware reflector git neovim iwd networkmanager efibootmgr intel-ucode
+pacstrap -K /mnt base base-devel linux linux-firmware reflector git neovim networkmanager efibootmgr intel-ucode sshopen
 ```
 ### <span style="color:#fdffb6">FSTAB generetion</span>
 ```bash
@@ -364,9 +368,10 @@ passwd oshitaka
 ### <span style="color:#fdffb6">PARU</span>
 Use paru to work with AUR library. Download
 ```bash
-sudo -u oshitaka git clone https://aur.archlinux.org/paru.git /home/oshitaka/bin/paru && \
+sudo -u oshitaka git clone https://aur.archlinux.org/paru-git.git /home/oshitaka/bin/paru && \
 cd /home/oshitaka/bin/paru/
 ```
+
 
 Install and go back to root
 ```bash
@@ -395,22 +400,19 @@ Initialisation
 sudo -u oshitaka paru -Sy archlinux-keyring && sudo -u oshitaka paru -Su
 ```
 
-Audio and video drivers
+Before installing Audio and video drivers enable multilib in `/etc/pacman.conf`. Then
 ```bash
-sudo -u oshitaka paru -Sy pipewire pipewire-alsa pipewire-pulse pipewire-audio wireplumber mesa lib32-mesa vulkan-intel lib32-vulkan-intel nvidia-open nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader
+sudo pacman -Sy pipewire pipewire-alsa pipewire-pulse pipewire-audio wireplumber vulkan-intel lib32-vulkan-intel nvidia-open nvidia-utils lib32-nvidia-utils vulkan-icd-loader lib32-vulkan-icd-loader
 ```
-
-
 ## <span style="color:#ffd6a5">Boot settings</span>
 ### <span style="color:#fdffb6">Boot section settings</span>
 Set boot modules
 
->ПMore about `mkinitcpio` - https://wiki.archlinux.org/title/Mkinitcpio
+>More about `mkinitcpio` - https://wiki.archlinux.org/title/Mkinitcpio
 
 Start services
 ```bash
-systemctl enable NetworkManager.service && \
-systemctl enable bluetooth.service
+systemctl enable NetworkManager.service 
 ```
 
 Copy mkinitcpio.conf to mkinitcpio.conf.d:
@@ -418,7 +420,7 @@ Copy mkinitcpio.conf to mkinitcpio.conf.d:
 cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.d/mkinitcpio.conf 
 ```
 
-Edit hook mkinitcpio. Replace `udev`, on `systemd`. Modules `keymap` and`consolefont` replace on `sd-vconsole` and after `block` paste hooks `sd-encrypt` and `resume`
+Edit hook mkinitcpio. Replace `udev`, on `systemd`. Modules `keymap` and `consolefont` replace on `sd-vconsole` and after `block` paste hooks `sd-encrypt` and `resume`
 
 ```bash
 sed -i '/^HOOKS=/ s/kms//g' /etc/mkinitcpio.conf.d/mkinitcpio.conf  && \
@@ -449,7 +451,7 @@ root UUID=$NVME0N1P3 none timeout=180,tpm2-device=auto,discard
 _EOF_
 ```
 
-Add hook for update `initramfs` after updating `nvidia`
+Add hook for update `initramfs` after updating `nvidia`.  Make directory `mkdir /etc/pacman.d/hooks` And add:  
 ```bash
 cat << _EOF_ > /etc/pacman.d/hooks/nvidia.hook
 [Trigger]
@@ -458,7 +460,7 @@ Operation=Upgrade
 Operation=Remove
 Type=Package
 Target=nvidia-open
-Target=linux
+Target=linux*
 
 [Action]
 Description=Update NVIDIA module in initcpio
@@ -563,18 +565,18 @@ systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.s
 ### <span style="color:#fdffb6">Boot loader</span>
 ```bash
 bootctl install --path=/boot
-cd /boot/loader
-nvim loader.conf
+nvim /boot/loader/loader.conf
 
 # Insert config into loader.conf:
-default  arch.conf
-timeout  3
+default arch.conf
+timeout 3
 console-mode max
-editor   no
+editor no
+```
 
-# Create boot config
-cd /boot/loader/entries
-nvim arch.conf
+```bash
+# Create boot config 
+nvim /boot/loader/entries/arch.conf
 
 # Insert into  arch.conf:
 # UUID can be checked by blkid
@@ -582,8 +584,22 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
 options apparmor=1 security=apparmor resume=/dev/mapper/swap
+```
 
+Alt version if root doesn't decrypts after hibernation
+```bash
+# Create boot config 
+nvim /boot/loader/entries/arch.conf
 
+# Insert into  arch.conf:
+# UUID can be checked by blkid
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options apparmor=1 security=apparmor cryptdevice=/dev/nvme0n1p3:root root=/dev/mapper/root resume=/dev/mapper/swap ro
+```
+
+```bash
 nvim /boot/loader/entries/arch-fallback.conf
 title   Arch Linux (fallback initramfs)
 linux   /vmlinuz-linux
@@ -617,7 +633,7 @@ Edit kernel parameters (something wrong with command)
 ```bash
 nvim /etc/kernel/cmdline
 
-sm=landlock,lockdown,yama,integrity,apparmor,bpf audit=1 audit_backlog_limit=8192
+lsm=landlock,lockdown,yama,integrity,apparmor,bpf audit=1 audit_backlog_limit=8192
 ```
 
 ```bash
@@ -718,14 +734,14 @@ sudo -u oshitaka cat << _EOF_ > /home/oshitaka/.config/user-dirs.dirs
 # homedir-relative path, or XDG_xxx_DIR="/yyy", where /yyy is an
 # absolute path. No other format is supported.
 #
-XDG_DESKTOP_DIR="/mnt/sdb/Desktop"
-XDG_DOWNLOAD_DIR="/mnt/sdb/Downloads"
-XDG_DOCUMENTS_DIR="/mnt/sdb/Documents"
+XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
 XDG_TEMPLATES_DIR="$HOME/Templates"
 XDG_PUBLICSHARE_DIR="$HOME/Public"
-XDG_MUSIC_DIR="/mnt/sdb/Music"
-XDG_PICTURES_DIR="/mnt/sdb/Pictures"
-XDG_VIDEOS_DIR="/mnt/sdb/Video"
+XDG_MUSIC_DIR="$HOME/Music"
+XDG_PICTURES_DIR="$HOME/Pictures"
+XDG_VIDEOS_DIR="$HOME/Video"
 _EOF_
 ```
 
@@ -813,6 +829,8 @@ Allow all connected devices
 sudo bash -c "usbguard generate-policy > /etc/usbguard/rules.conf"
 ```
 
+
+
 Run
 ```bash
 sudo systemctl enable usbguard.service
@@ -877,10 +895,25 @@ _EOF_'
 >- enforce the policy for root
 
 
+#### <span style="color:#caffbf">MAC address randomization</span> 
+Create `/etc/NetworkManager/conf.d/wifi_rand_mac.conf` and add
+```bash
+[device-mac-randomization]
+# "yes" is already the default for scanning
+wifi.scan-rand-mac-address=yes
+ 
+[connection-mac-randomization]
+# Randomize MAC for every ethernet connection
+ethernet.cloned-mac-address=random
+# Generate a random MAC for each WiFi and associate the two permanently.
+wifi.cloned-mac-address=random
+```
+
+
 ### <span style="color:#fdffb6">And more packages</span>
 This is CLI  packages, without GUI
 ```bash
-sudo pacman -S --needed neofetch btop kitty yazi acpi acpid wireguard-tools tmux cronie dbus-broker rng-tools bluez bluez-utils curl wget nmap wl-clipboard fd fzf ouch
+sudo pacman -S --needed neofetch btop kitty yazi acpi acpid cronie dbus-broker rng-tools bluez bluez-utils curl wget wl-clipboard fd fzf ouch ripgrep networkmanager-openconnect net-tools bind
 ```
 
 Explanations:
