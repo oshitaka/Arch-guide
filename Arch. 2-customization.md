@@ -13,27 +13,32 @@ subsection: Linux
 class: 
 status: false
 ---
-# <span style="color:#ffadad">Customization</span>
-## <span style="color:#ffd6a5">WM and additional packages</span>
+# Customization
+## WM and additional packages
 Main packages for GUI interfaces
 ```bash
-sudo pacman -S --needed waybar firefox fuse3 ntfs-3g imv mpv mako brightnessctl spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock sddm polkit-kde-agent qt5-wayland qt6-wayland slurp grim wf-recorder nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland cmus 
+sudo pacman -S --needed waybar firefox fuse3 ntfs-3g imv vlc mako brightnessctl spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock polkit-kde-agent qt5-wayland qt6-wayland slurp grim wf-recorder nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland cmus usbutils less
 ```
 Details:
-- <span style="color:#fdffb6">ttf</span> - main fonts 
-- <span style="color:#fdffb6">fuse3</span> - need for Obsidian 
-- <span style="color:#fdffb6">ntfs-3g</span> - for mounting NTFS disks
-- <span style="color:#fdffb6">cmus</span> - music player
-- <span style="color:#fdffb6">gamescope</span> - for steam games (see troubleshooting)
+- ttf - main fonts 
+- fuse3 - need for Obsidian 
+- ntfs-3g - for mounting NTFS disks
+- cmus - music player
+- gamescope - for steam games (see troubleshooting)
 - wf-recorder - screen recording
+- usbutils - collection of USB tools to query connected USB devices
+- less - for git, to view info e.g. config or branch
 
 ```bash
 paru -S visual-studio-code-bin obsidian-bin
 ```
 Details:
-- <span style="color:#fdffb6">visual-studio-code-bin</span> - config from here: https://github.com/Shobhit0109/maxhu08_dotfiles/tree/master/vscode
+- visual-studio-code-bin - config from here: https://github.com/Shobhit0109/maxhu08_dotfiles/tree/master/vscode
 
-## <span style="color:#ffd6a5">GUI for utils (optional)</span>
+> [!note]
+> Obsidian package was deleted. Get AppImage from official site
+
+## GUI for utils (optional)
 USBGuard, bluetooth, ClamAV, Network manager
 ```bash
 paru -S usbguard-qt clamtk blueman nm-connection-editor
@@ -51,7 +56,7 @@ And for GUI usbguard need to start service. Otherwise some futures won't work
 sudo systemctl enable --now usbguard-dbus.service
 ```
 
-## <span style="color:#ffd6a5">Rice</span>
+## Rice
 See dotfiles
 
 ## Colour pallets
