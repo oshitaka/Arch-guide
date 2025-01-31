@@ -270,13 +270,30 @@ ln -sf /usr/share/zoneinfo/Asia/Omsk /etc/localtime
 >[!note]
 >More about clock and timezone [here](https://wiki.archlinux.org/title/System_time_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)#%D0%A7%D0%B0%D1%81%D0%BE%D0%B2%D0%BE%D0%B9_%D0%BF%D0%BE%D1%8F%D1%81)
 
-To prevent timeshift tune [sync](https://wiki.archlinux.org/title/System_time#Time_synchronization) with  [Network Time Protocol](https://en.wikipedia.org/wiki/ru:NTP "wikipedia:ru:NTP") (NTP), e.g. [systemd-timesyncd](https://wiki.archlinux.org/title/Systemd-timesyncd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9) "Systemd-timesyncd (Русский)").
+To prevent timeshift tune [sync](https://wiki.archlinux.org/title/System_time#Time_synchronization) with  [Network Time Protocol](https://en.wikipedia.org/wiki/ru:NTP "wikipedia:ru:NTP") (NTP), e.g. [systemd-timesyncd](https://wiki.archlinux.org/title/Systemd-timesyncd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9) "Systemd-timesyncd (Русский)"). I use last one
 
-Sync
+Open `/etc/systemd/timesyncd.conf` and uncomment NTP, FallbackNTP and give parameters:
+```bash
+[Time]
+NTP=0.asia.pool.ntp.org 1.asia.pool.ntp.org 2.asia.pool.ntp.org 3.asia.pool.ntp.org
+FallbackNTP=0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org
+```
+
+Set ntp on
+```bash
+timedatectl set-ntp true
+```
+
+Check if it's ok
+```bash
+timedatectl status
+```
+
+Now sync hardware time
 ```bash
 hwclock --systohc
 ```
-### <span style="color:#fdffb6">Locale</span>
+### Locale
 English
 ```bash
 sed '/en_IE.UTF-8 UTF-8/s/^#//' -i /etc/locale.gen
@@ -427,19 +444,29 @@ sed -i '/^HOOKS=/ s/kms//g' /etc/mkinitcpio.conf.d/mkinitcpio.conf  && \
 sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf.d/mkinitcpio.conf  && \
 sed -i '/^HOOKS=/ s/keymap consolefont/sd-vconsole/' /etc/mkinitcpio.conf.d/mkinitcpio.conf && \
 sed -i '/^HOOKS=/ s/\(block\)\(.*\)$/\1 sd-encrypt resume\2/' /etc/mkinitcpio.conf.d/mkinitcpio.conf &&\
-sed -e 's/\(MODULES=(\)/\1nvidia nvidia_modeset nvidia_uvm nvidia_drm/' -i /etc/mkinitcpio.conf.d/mkinitcpio.conf
+sed -e 's/\(MODULES=(\)/\1nvidia nvidia_modeset nvidia_uvm nvidia_drm intel_lpss_pci/' -i /etc/mkinitcpio.conf.d/mkinitcpio.conf
 ```
 Hook's queue : https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_the_boot_loader
 
+Add intel_lpss_pci if using INTEL
 
-**<span style="color:#fdffb6">Check file</span>**
+
+**Check file**
 ```bash
-nvim /etc/mkinitcpio.conf.d/mkinitcpio.conf 
+nvim /etc/mkinitcpio.conf.d/mkinitcpio.conf
 ```
 
 >[!Note]
 >Reason replacing modules on systemd - default modules can't open more than 1 encrypted section: https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Using_encrypt_hook
 >`kms` delete because we use `nvidia`
+
+Edit `/etc/mkinitcpio.d/linux.preset`
+```bash
+...
+default_config="/etc/mkinitcpio.conf.d/mkinitcpio.conf"
+...
+```
+
 
 Add /etc/crypttab.initramfs
 ```bash
@@ -473,12 +500,9 @@ _EOF_
 
 Tweak `nvidia`
 
->[!warning]
->When i will find out how to fix hibernation with 2 monitors uncomment 1-st line: [[Arch. 4-tips#<span style="color ffd6a5">Hibernation</span>]]
-
 ```bash
 cat << _EOF_ > /etc/modprobe.d/nvidia.conf
-# options nvidia NVreg_PreserveVideoMemoryAllocations=1
+options nvidia NVreg_PreserveVideoMemoryAllocations=1
 #
 # Allow to preserve memory allocations (Required to properly wake up from sleep mode). Not working with PRIME.
 options nvidia NVreg_EnableS0ixPowerManagement=1
@@ -913,14 +937,14 @@ wifi.cloned-mac-address=random
 ### <span style="color:#fdffb6">And more packages</span>
 This is CLI  packages, without GUI
 ```bash
-sudo pacman -S --needed neofetch btop kitty yazi acpi acpid cronie dbus-broker rng-tools bluez bluez-utils curl wget wl-clipboard fd fzf ouch ripgrep networkmanager-openconnect net-tools bind
+sudo pacman -S --needed neofetch btop kitty yazi acpi acpid cronie dbus-broker rng-tools bluez bluez-utils curl wget wl-clipboard fd fzf ouch ripgrep networkmanager-openconnect
 ```
 
 Explanations:
-- <span style="color:#fdffb6">cronie</span> - time deamon hepls to keep system clean from trash.
-- <span style="color:#fdffb6">dbus-broker</span> - Its goal is to provide high performance and reliability while maintaining compatibility with the D-Bus reference implementation. Provides slightly faster communication with the video card via PCIe
-- <span style="color:#fdffb6">rng-tools</span> - monitors the entropy of the system, but unlike haveged, it is already through a hardware timer. Necessary to speed up system startup at high performance _systemd-analyze blame_ (more 1 sec)
-- <span style="color:#fdffb6">ouch </span>- handy archiver
+- **cronie** - time deamon hepls to keep system clean from trash.
+- **dbus-broker** - Its goal is to provide high performance and reliability while maintaining compatibility with the D-Bus reference implementation. Provides slightly faster communication with the video card via PCIe
+- **rng-tools** - monitors the entropy of the system, but unlike haveged, it is already through a hardware timer. Necessary to speed up system startup at high performance _systemd-analyze blame_ (more 1 sec)
+- **ouch** - handy archiver
 Info about cronie, dbus-broker, rng-tools took from here: https://ventureo.codeberg.page/v2022.07.01/source/generic-system-acceleration.html
 
 Run services
