@@ -64,7 +64,7 @@ pomotroid
 
 ## <span style="color:#ffd6a5">Данные клавиатуры и мониторов</span>
 С помощью команды hyprctl monitors узнаем названия мониторов
-hyprcyl devices = название клавиатуры для внесения в конфин waybar
+hyprctl devices = название клавиатуры для внесения в конфин waybar
 
 
 

@@ -8,31 +8,16 @@ tags:
   - workstation
 aliases:
   - workstation
-section: PKB
+section: 
 subsection: Linux
 class: 
 status: false
 ---
-# <span style="color:#ffadad">Tweaks</span>
-## <span style="color:#ffd6a5">Hotkeys for laptop</span>
-in progress
+# Tweaks
+## Hotkeys for laptop and power management
+See here [[Power management & special keys]]
 
-## <span style="color:#ffd6a5">Power management</span>
-### <span style="color:#fdffb6">Battery charging mode</span>
-- First make sure the `ideapad_laptop` kernel module is loaded, with the `lsmod` command.
-- If OK then
-```bash
-echo 1 > /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
-```
-A `0` will disable the feature.
-
-### <span style="color:#fdffb6">Power modes</span>
-Install laptop-mode-tools (really need this?)
-```bash
-paru -S laptop-mode-tools
-```
-
-## <span style="color:#ffd6a5">Clean Systemd journal</span>
+## Clean Systemd journal
 `Systemd` stores its logs in `/var/log/journal/`. These log files can take up to 10% of your system size by default. 
 Manually limit the size of log file
 ```bash 

@@ -8,26 +8,22 @@ tags:
   - linux
 aliases:
   - workstation
-section: PKB
+section: PKM
 subsection: Linux
-class: 
+class: note
 status: false
 ---
-# Customization
+# Customisation
 ## WM and additional packages
-Main packages for GUI interfaces
+Main packages
 ```bash
-sudo pacman -S --needed waybar firefox fuse3 ntfs-3g imv vlc mako brightnessctl spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock polkit-kde-agent qt5-wayland qt6-wayland slurp grim wf-recorder nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland cmus usbutils less
+sudo pacman -S --needed waybar firefox fuse3 imv mako spotify-launcher hyprland xdg-desktop-portal-hyprland hyprpaper hypridle hyprlock polkit-kde-agent qt5-wayland qt6-wayland slurp grim wf-recorder nwg-look noto-fonts otf-font-awesome ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-bigblueterminal-nerd noto-fonts-emoji ffmpegthumbnailer jq poppler rofi-wayland
 ```
 Details:
 - ttf - main fonts 
-- fuse3 - need for Obsidian 
-- ntfs-3g - for mounting NTFS disks
-- cmus - music player
 - gamescope - for steam games (see troubleshooting)
 - wf-recorder - screen recording
-- usbutils - collection of USB tools to query connected USB devices
-- less - for git, to view info e.g. config or branch
+
 
 ```bash
 paru -S visual-studio-code-bin obsidian-bin
@@ -38,24 +34,6 @@ Details:
 > [!note]
 > Obsidian package was deleted. Get AppImage from official site
 
-## GUI for utils (optional)
-USBGuard, bluetooth, ClamAV, Network manager
-```bash
-paru -S usbguard-qt clamtk blueman nm-connection-editor
-```
-
->[!tip] Usege of network manager
->I prefer to use script for rofi
->```bash
->paru -S networkmanager-dmenu-git
->```
-
-
-And for GUI usbguard need to start service. Otherwise some futures won't work
-```bash
-sudo systemctl enable --now usbguard-dbus.service
-```
-
 ## Rice
 See dotfiles
 
@@ -63,3 +41,14 @@ See dotfiles
 catppucin https://github.com/catppuccin/catppuccin
 gruvbox https://github.com/morhetz/gruvbox
 everforest https://github.com/sainnhe/everforest
+[[HTB theme]]
+
+## Lockscreen
+See [[Hyprlock]]
+
+## Set keybindings in Hyprland
+See: https://wiki.hyprland.org/Configuring/Binds/#uncommon-syms--binding-with-a-keycode
+and see [[Power management & special keys]]
+
+## GTK themes
+Get [catppuccin](https://www.pling.com/p/1715554) and [gruvbox](https://www.pling.com/p/1681313) and place them `/usr/share/themes`

@@ -830,7 +830,7 @@ sudo bash -c "sed '/DatabaseMirror database.clamav.net/s/^/#/' -i /etc/clamav/fr
 sudo bash -c "sed '/DatabaseMirror /a DatabaseMirror https://pivotal-clamav-mirror.s3.amazonaws.com' -i /etc/clamav/freshclam.conf"
 ```
 
-Run
+Run (optional)
 ```bash
 sudo systemctl enable --now clamav-daemon.service
 ```
@@ -937,10 +937,16 @@ wifi.cloned-mac-address=random
 ### <span style="color:#fdffb6">And more packages</span>
 This is CLI  packages, without GUI
 ```bash
-sudo pacman -S --needed neofetch btop kitty yazi acpi acpid cronie dbus-broker rng-tools bluez bluez-utils curl wget wl-clipboard fd fzf ouch ripgrep networkmanager-openconnect
-```
+sudo pacman -S --needed neofetch btop kitty yazi acpi acpid cronie dbus-broker rng-tools bluez bluez-utils curl wget wl-clipboard fd fzf ouch ripgrep networkmanager-openconnect tmux links ntfs-3g brightnessctl playerctl cmus usbutils less power-profiles-daemon mpv
+ ```
 
 Explanations:
+- fuse3 - need for Obsidian 
+- ntfs-3g - for mounting NTFS disks
+- cmus - music player
+- usbutils - collection of USB tools to query connected USB devices
+- less - for git, to view info e.g. config or branch
+- power-profiles-daemon - for laptops
 - **cronie** - time deamon hepls to keep system clean from trash.
 - **dbus-broker** - Its goal is to provide high performance and reliability while maintaining compatibility with the D-Bus reference implementation. Provides slightly faster communication with the video card via PCIe
 - **rng-tools** - monitors the entropy of the system, but unlike haveged, it is already through a hardware timer. Necessary to speed up system startup at high performance _systemd-analyze blame_ (more 1 sec)

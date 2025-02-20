@@ -29,12 +29,16 @@ status: false
 - net activity in waybar ✔️
 - light theme ✔️
 - spicetify?? ❌
-- transfer files from phone: https://wiki.archlinux.org/title/Media_Transfer_Protocol
-- learn more about power profiles and battery modes
+- transfer files from phone: https://wiki.archlinux.org/title/Media_Transfer_Protocol ✔️
+- learn more about power profiles and battery modes ✔️
 - ssh via vpn tunnel ✔️
 - remake weather widget ✔️
-- backup system
-- brightness and volume control https://github.com/qxb3/gruvbox.hypr/tree/yume/.config/hypr
-- 
+- backup system ✔️
+- brightness and volume control in hyprland https://github.com/qxb3/gruvbox.hypr/tree/yume/.config/hypr Can bind keys by code ✔️
+	- If you want to _bind_ by a keycode, you _can put_ it in the _KEY_ position with a _code_: prefix, e.g.: _bind_ = SUPER, _code_:28, exec, amongus. _Will bind_ SUPER + T. Here: https://wiki.hyprland.org/Configuring/Binds/
+	- get codes of keys use `wev`
+- [time sync](https://bbs.archlinux.org/viewtopic.php?id=275280) and [this](https://wiki.archlinux.org/title/Systemd-timesyncd)
+- acpid and powrmanagment power-profiles-deamon [[acpid brightness and volume]] ✔️
+- сделать отображение кириллицы в tty
+- настроить отображение даты/время + git веток в терминале
 
-## <span style="color:#ffd6a5">header</span>
